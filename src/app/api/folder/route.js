@@ -116,6 +116,19 @@ export const POST = async (req) => {
     const data = await req.json();
 
     const existingAllFolders = await Folder.find();
+    console.log("existingAllFolders",existingAllFolders)
+
+    if(existingAllFolders.length===0){
+      const newFolder = new Folder({
+        name: data.name,
+        type: data.type,
+        uuid: data.uuid,
+        children: [],
+      });
+
+      await newFolder.save();
+      return NextResponse.json({ message: "New folder created successfully" });
+    }
 
     if (existingAllFolders) {
       const updateDataByUUID = async (data, incomingData, parentUuid) => {
@@ -150,7 +163,7 @@ export const POST = async (req) => {
 
       if (updatedFolders) {
         await Folder.deleteMany({});
-        await Folder.insertMany(updatedFolders); // Insert the updated data
+        await Folder.insertMany(updatedFolders);
 
         return NextResponse.json({ message: "Folder updated successfully" });
       }
