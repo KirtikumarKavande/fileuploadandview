@@ -2,17 +2,17 @@
 
 import React, { useEffect, useState } from "react";
 import Folder from "./Folder";
+import useGetDataFromDB from "@/hooks/useGetDataFromDB";
 const Sidebar = () => {
+ const getDataFromDB= useGetDataFromDB()
   const [getFolder, setGetFolder] = useState([]);
   useEffect(() => {
     fetchData();
   }, []);
   const fetchData = async () => {
-    const data = await fetch("http://localhost:3000/api/folder", {
-      method: "GET",
-    });
-    const res = await data.json();
-    setGetFolder(res);
+   const data=await getDataFromDB('folder')
+    console.log("data see",data)
+    setGetFolder(data);
   };
 
   return (

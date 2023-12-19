@@ -52,14 +52,14 @@ const Item = ({ name, children, allFolders }) => {
         <div onClick={toggleOpen} className="text-sm  font-light">
           {name}
         </div>
-        {isShowSuggestion && allFolders.type==="folder"&&(
+        {isShowSuggestion && allFolders.type === "folder" && (
           <div className="flex">
-          <div onClick={addNewFolder} className=" hover:text-gray-400">
-            <FaFolderPlus size={15} />
-          </div>
-          <div onClick={addFile} className="pl-2 hover:text-gray-400">
-            <BsFillFileEarmarkPlusFill size={16} />
-          </div>
+            <div onClick={addNewFolder} className=" hover:text-gray-400">
+              <FaFolderPlus size={15} />
+            </div>
+            <div onClick={addFile} className="pl-2 hover:text-gray-400">
+              <BsFillFileEarmarkPlusFill size={16} />
+            </div>
           </div>
         )}
       </div>
