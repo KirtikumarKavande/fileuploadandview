@@ -11,12 +11,11 @@ const Sidebar = () => {
   }, []);
   const fetchData = async () => {
    const data=await getDataFromDB('folder')
-    console.log("data see",data)
     setGetFolder(data);
   };
 
   return (
-    <div className="w-40 bg-black min-h-screen">
+    <div className="w-40 mt- bg-black min-h-screen pl-1">
       <Folder data={getFolder} />
     </div>
   );

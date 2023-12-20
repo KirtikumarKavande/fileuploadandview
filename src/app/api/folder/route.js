@@ -116,7 +116,6 @@ export const POST = async (req) => {
     const data = await req.json();
 
     const existingAllFolders = await Folder.find();
-    console.log("existingAllFolders",existingAllFolders)
 
     if(existingAllFolders.length===0){
       const newFolder = new Folder({

@@ -4,45 +4,38 @@ import { FaFolderPlus } from "react-icons/fa6";
 import { BsFillFileEarmarkPlusFill } from "react-icons/bs";
 import { acceptableExtensions } from "@/utility/constant/constant";
 import usePostDataToDB from "@/hooks/usePostDataToDB";
+import { IoFolderOpen } from "react-icons/io5";
+import { FaFile } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { updateUuid } from "@/store/fileData";
 
 const Item = ({ name, children, allFolders }) => {
-  console.log(allFolders);
   const [isOpen, setIsOpen] = useState(false);
   const [isShowSuggestion, setIsShowSuggestion] = useState(false);
   const [isshowSuggestionForInput, setIsSuggestionForInput] = useState(false);
-  const [selectedType,setSelectedType] = useState("");
+  const [selectedType, setSelectedType] = useState("");
   const postDataToDB = usePostDataToDB();
+  const [isShowError, setIsShowError] = useState("");
+  const dispatch=useDispatch()
   const ref = useRef();
-  const toggleOpen = () => {
+  const toggleOpen = async () => {
     setIsOpen(!isOpen);
+
+    if (allFolders.type === "folder") return;
+    dispatch(updateUuid(allFolders.uuid))
+    console.log("allFolders", allFolders);
   };
 
   const addNewFolder = () => {
-
     setIsSuggestionForInput(true);
     setSelectedType("folder");
   };
   const addNewFile = () => {
-
     setIsSuggestionForInput(true);
     setSelectedType("file");
   };
 
-  const addFile = async () => {
-    const data = await fetch("http://localhost:3000/api/folder", {
-      method: "POST",
-      body: JSON.stringify({
-        name: "file",
-        type: "file",
-        parentUuid: allFolders.uuid,
-        uuid: uuidv4(),
-      }),
-    });
-    const res = await data.json();
-    console.log("addNewFolder", allFolders);
-  };
   const sendDataToDB = (event) => {
-    console.log("grate yuvi",allFolders )
     if (event.keyCode === 13) {
       if (selectedType === "file") {
         const inputByUser = ref.current.value;
@@ -53,10 +46,10 @@ const Item = ({ name, children, allFolders }) => {
             parentUuid: allFolders.uuid,
             uuid: uuidv4(),
           };
-          setIsSuggestionForInput(false)
+          setIsSuggestionForInput(false);
           postDataToDB("folder", "POST", obj);
         } else {
-          console.log("wrong format");
+          setIsShowError(true);
         }
       } else {
         const obj = {
@@ -66,7 +59,7 @@ const Item = ({ name, children, allFolders }) => {
           parentUuid: allFolders.uuid,
           uuid: uuidv4(),
         };
-        setIsSuggestionForInput(false)
+        setIsSuggestionForInput(false);
 
         postDataToDB("folder", "POST", obj);
       }
@@ -81,8 +74,22 @@ const Item = ({ name, children, allFolders }) => {
         onMouseLeave={() => setIsShowSuggestion(false)}
         className="flex items-center justify-between pt-[2px]"
       >
-        <div onClick={toggleOpen} className="text-sm  font-light">
-          {name}
+        <div
+          onClick={() => {
+            toggleOpen(allFolders);
+          }}
+          className="text-sm  font-light flex "
+        >
+          {allFolders.type === "folder" ? (
+            <span className="text-yellow-600 mr-1">
+              <IoFolderOpen size={25} />
+            </span>
+          ) : (
+            <span className="text-yellow-600 mr-1">
+              <FaFile size={25} />
+            </span>
+          )}
+          <span className="">{name}</span>
         </div>
         {isShowSuggestion && allFolders.type === "folder" && (
           <div className="flex">
@@ -96,11 +103,16 @@ const Item = ({ name, children, allFolders }) => {
         )}
       </div>
       {isshowSuggestionForInput && (
-        <input
-          onKeyDown={sendDataToDB}
-          ref={ref}
-          className="border text-black text-sm border-none px-1 outline-none bg-white w-36"
-        />
+        <>
+          <input
+            onKeyDown={sendDataToDB}
+            ref={ref}
+            className="border text-black text-sm border-none px-1 outline-none bg-white w-36"
+          />
+          {isShowError && (
+            <div className="text-sm text-red-400">Wrong file Format</div>
+          )}
+        </>
       )}
 
       <div className=" w-36 pl-1">{isOpen && children}</div>
