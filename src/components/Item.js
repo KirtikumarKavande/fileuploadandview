@@ -7,7 +7,7 @@ import usePostDataToDB from "@/hooks/usePostDataToDB";
 import { IoFolderOpen } from "react-icons/io5";
 import { FaFile } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import { updateUuid } from "@/store/fileData";
+import { addFolderOrFileReducer, updateUuid } from "@/store/fileData";
 
 const Item = ({ name, children, allFolders }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,6 +46,7 @@ const Item = ({ name, children, allFolders }) => {
             parentUuid: allFolders.uuid,
             uuid: uuidv4(),
           };
+         dispatch(addFolderOrFileReducer(obj)) 
           setIsSuggestionForInput(false);
           postDataToDB("folder", "POST", obj);
         } else {
@@ -59,6 +60,8 @@ const Item = ({ name, children, allFolders }) => {
           parentUuid: allFolders.uuid,
           uuid: uuidv4(),
         };
+        dispatch(addFolderOrFileReducer(obj)) 
+
         setIsSuggestionForInput(false);
 
         postDataToDB("folder", "POST", obj);

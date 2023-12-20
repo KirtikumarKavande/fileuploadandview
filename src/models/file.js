@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 const FileContentSchema = new Schema({
-  data: String,
+  fileContent: String,
    uuid: String,
 });
 export const FileContent =
